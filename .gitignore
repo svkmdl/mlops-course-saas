@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.mlops_saas_env
 
 # vercel
 .vercel
@@ -39,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ide
+.idea
+
+# guides and tests
+week1
+api/workbook.py
+
+# caches
+api/__pycache__/
