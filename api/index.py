@@ -15,7 +15,7 @@ def idea():
         # timeout=900.0,
         api_key=api_key
     )
-    prompt = [{"role": "user", "content": "In a few sentences, come up with a new business idea using AI Agents"}]
+    prompt = [{"role": "user", "content": "Reply with a new business idea for AI Agents, formatted with headings, sub-headings and bullet points"}]
     stream = client.chat.completions.create(model="gpt-5-nano", messages=prompt, stream=True) # service_tier="flex"
 
     def event_stream():
