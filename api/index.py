@@ -17,7 +17,7 @@ def idea(creds: HTTPAuthorizationCredentials = Depends(clerk_guard)):
     # How to use this info :
     # - track usage per user
     # - store generated ideas in db
-    # - apply user specific limits or customization
+    # - apply user specific limits or customization using their subscription plan
 
     client = OpenAI(
         # increase default timeout to 15 minutes (from 10 minutes) for service_tier="flex" calls to be on the safe side
@@ -36,8 +36,9 @@ def idea(creds: HTTPAuthorizationCredentials = Depends(clerk_guard)):
             text = chunk.choices[0].delta.content
             if text:
                 lines = text.split("\n")
-                for line in lines:
-                    yield f"data: {line}\n"
-                yield "\n"
+                for line in lines[:-1]:
+                    yield f"data: {line}\n\n"
+                    yield "data: \n"
+                yield f"data: {lines[-1]}\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
