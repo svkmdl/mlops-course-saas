@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
@@ -10,6 +10,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source';
 export default function Product() {
     const { getToken } = useAuth();
     const [idea, setIdea] = useState<string>('…loading');
+    const updateScheduled = useRef<boolean>(false);
 
     useEffect(() => {
         let buffer = '';
@@ -24,7 +25,13 @@ export default function Product() {
                 headers: { Authorization: `Bearer ${jwt}` },
                 onmessage(ev) {
                     buffer += ev.data;
-                    setIdea(buffer);
+                    if (!updateScheduled.current) {
+                        updateScheduled.current = true;
+                        requestAnimationFrame(() => {
+                            setIdea(buffer);
+                            updateScheduled.current = false;
+                        });
+                    }
                 },
                 onerror(err) {
                     console.error('SSE error:', err);
